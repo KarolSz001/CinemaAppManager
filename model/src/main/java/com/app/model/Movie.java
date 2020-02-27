@@ -2,12 +2,11 @@ package com.app.model;
 
 
 import com.app.model.enums.Genre;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -22,5 +21,10 @@ public class Movie {
     Double price;
     Integer duration;
     LocalDate release_date;
+
+    @OneToMany(mappedBy = "movie")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<SalesStand> salesStands;
 
 }

@@ -2,16 +2,16 @@ package com.app.services;
 
 
 import com.app.model.Customer;
-import com.app.model.Loyalty_Card;
+import com.app.model.LoyaltyCard;
 import com.app.model.MovieWithDateTime;
-import com.app.model.Sales_Stand;
+import com.app.model.SalesStand;
 import com.app.model.enums.Genre;
 import com.app.model.exception.AppException;
 import com.app.model.valid.CustomerValidator;
-import com.app.repo.CustomerRepository;
-import com.app.repo.LoyaltyCardRepository;
-import com.app.repo.MovieRepository;
-import com.app.repo.SalesStandRepository;
+import com.app.repo.impl.CustomerRepositoryImpl;
+import com.app.repo.impl.LoyaltyCardRepositoryImpl;
+import com.app.repo.impl.MovieRepositoryImpl;
+import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.dataGenerator.DataManager;
 
 import java.text.DecimalFormat;
@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 
 public class SaleTicketService {
 
-    private final MovieRepository movieRepository = new MovieRepository();
-    private final CustomerRepository customerRepository = new CustomerRepository();
+    private final MovieRepositoryImpl movieRepositoryimpl = new MovieRepositoryImpl();
+    private final CustomerRepositoryImpl customerRepositoryImpl = new CustomerRepositoryImpl();
     private final CustomerValidator customerValidator = new CustomerValidator();
-    private final SalesStandRepository salesStandRepository = new SalesStandRepository();
-    private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-    private final MovieService movieService = new MovieService(customerRepository, customerValidator, salesStandRepository, loyaltyCardRepository, movieRepository);
-    private final CustomerService customerService = new CustomerService(movieRepository, customerRepository, customerValidator, salesStandRepository, loyaltyCardRepository);
+    private final SalesStandRepositoryImpl salesStandRepositoryImpl = new SalesStandRepositoryImpl();
+    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl = new LoyaltyCardRepositoryImpl();
+    private final MovieService movieService = new MovieService(customerRepositoryImpl, customerValidator, salesStandRepositoryImpl, loyaltyCardRepositoryImpl, movieRepositoryimpl);
+    private final CustomerService customerService = new CustomerService(movieRepositoryimpl, customerRepositoryImpl, customerValidator, salesStandRepositoryImpl, loyaltyCardRepositoryImpl);
 
     private static final LocalTime HIGH_RANGE_TIME = LocalTime.of(22, 30);
     private static final Integer MOVIES_LIMIT_NUMBER = 2;
@@ -59,7 +59,7 @@ public class SaleTicketService {
             throw new AppException(" null arg in saleTicketOperation method");
         }
         MovieWithDateTime movieWithDateTime;
-        Sales_Stand sales_stand;
+        SalesStand sales_stand;
         customerService.addCustomer(customer);
         DataManager.getLine(" PRESS KEY TO CONTINUE TO SEE WHAT WE HAVE TODAY TO WATCH ");
         System.out.println(" BELOW MOVIES WHICH ARE AVAILABLE TODAY ");
@@ -77,14 +77,14 @@ public class SaleTicketService {
         }
         if (hasDiscount(customerId)) {
             System.out.println(" DISCOUNT IS ACTIVE ");
-            sales_stand = new Sales_Stand().builder().customerId(customerId).movieId(idMovie).start_date_time(dateTime).discount(true).build();
+            sales_stand = new SalesStand().builder().customerId(customerId).movieId(idMovie).start_date_time(dateTime).discount(true).build();
             addTicketToDataBase(sales_stand);
             movieWithDateTime = sendConfirmationOfSellingTicket(customer.getEmail());
             discountPriceTicket(movieWithDateTime);
             increaseCurrentNumberMovieInLoyalCard(customerId);
         } else {
             System.out.println(" DISCOUNT IS NOT ACTIVE ");
-            sales_stand = new Sales_Stand().builder().customerId(customerId).movieId(idMovie).start_date_time(dateTime).discount(false).build();
+            sales_stand = new SalesStand().builder().customerId(customerId).movieId(idMovie).start_date_time(dateTime).discount(false).build();
             addTicketToDataBase(sales_stand);
             movieWithDateTime = sendConfirmationOfSellingTicket(customer.getEmail());
         }
@@ -154,19 +154,19 @@ public class SaleTicketService {
         return movieService.getInfo().stream().filter(f -> f.getEmail().equals(customerEmail)).max(Comparator.comparing(MovieWithDateTime::getId)).get();
     }
 
-    private void addTicketToDataBase(Sales_Stand ss) {
-        salesStandRepository.add(ss);
+    private void addTicketToDataBase(SalesStand ss) {
+        salesStandRepositoryImpl.addOrUpdate(ss);
     }
 
     private void addLoyalty(Customer customer) {
 
         Integer customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
         LocalDate date = LocalDate.now().plusMonths(1);
-        Loyalty_Card loyaltyCard = new Loyalty_Card().builder().expirationDate(date).discount(DISCOUNT_VALUE).moviesNumber(MOVIES_LIMIT_NUMBER).current_movies_number(0).build();
-        loyaltyCardRepository.add(loyaltyCard);
-        int sizeOfCardList = loyaltyCardRepository.findAll().size();
+        LoyaltyCard loyaltyCard = new LoyaltyCard().builder().expirationDate(date).discount(DISCOUNT_VALUE).moviesNumber(MOVIES_LIMIT_NUMBER).current_movies_number(0).build();
+        loyaltyCardRepositoryImpl.addOrUpdate(loyaltyCard);
+        int sizeOfCardList = loyaltyCardRepositoryImpl.findAll().size();
         // get last added card
-        Integer idLoyaltyCard = loyaltyCardRepository.findAll().get(sizeOfCardList - 1).getId();
+        Integer idLoyaltyCard = loyaltyCardRepositoryImpl.findAll().get(sizeOfCardList - 1).getId();
         customerService.addIdLoyalCardToCustomer(idLoyaltyCard, customerId);
         System.out.println(" ADDED NEW LOYALTY_CARD FOR CUSTOMER \n");
     }
@@ -181,10 +181,10 @@ public class SaleTicketService {
 
     private void increaseCurrentNumberMovieInLoyalCard(Integer itemId) {
         Integer loyaltyCardId = customerService.getCustomerById(itemId).get().getLoyalty_card_id();
-        Loyalty_Card loyaltyCard = loyaltyCardRepository.findOne(loyaltyCardId).get();
+        LoyaltyCard loyaltyCard = loyaltyCardRepositoryImpl.findOne(loyaltyCardId).get();
         int number = loyaltyCard.getCurrent_movies_number() + 1;
         loyaltyCard.setCurrent_movies_number(number);
-        loyaltyCardRepository.update(loyaltyCardId, loyaltyCard);
+        loyaltyCardRepositoryImpl.addOrUpdate(loyaltyCard);
     }
 
     public List<MovieWithDateTime> printAllTicketsHistory(Customer customer) {

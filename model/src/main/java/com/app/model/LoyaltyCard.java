@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 
 @Data
@@ -12,10 +13,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 
-public class Loyalty_Card {
+public class LoyaltyCard {
     Integer id;
     LocalDate expirationDate;
     Double discount;
     Integer moviesNumber;
     Integer current_movies_number;
+
+    @OneToOne(mappedBy = "license")
+    private Customer customer;
 }

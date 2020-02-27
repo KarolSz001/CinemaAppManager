@@ -2,10 +2,10 @@ package com.app.main;
 
 
 import com.app.model.valid.CustomerValidator;
-import com.app.repo.CustomerRepository;
-import com.app.repo.LoyaltyCardRepository;
-import com.app.repo.MovieRepository;
-import com.app.repo.SalesStandRepository;
+import com.app.repo.impl.CustomerRepositoryImpl;
+import com.app.repo.impl.LoyaltyCardRepositoryImpl;
+import com.app.repo.impl.MovieRepositoryImpl;
+import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.ControlAppService;
 import com.app.services.CustomerService;
 import com.app.services.MovieService;
@@ -22,11 +22,11 @@ public class App {
         sb.append(" ----------------------------------------------------------------------------- \n");
         System.out.println(sb.toString());
 
-        var movieRepository = new MovieRepository();
-        var customerRepository = new CustomerRepository();
+        var movieRepository = new MovieRepositoryImpl();
+        var customerRepository = new CustomerRepositoryImpl();
         var customerValidator = new CustomerValidator();
-        var salesStandRepository = new SalesStandRepository();
-        var loyaltyCardRepository = new LoyaltyCardRepository();
+        var salesStandRepository = new SalesStandRepositoryImpl();
+        var loyaltyCardRepository = new LoyaltyCardRepositoryImpl();
         var saleTicketService = new SaleTicketService();
 
         var customerService = new CustomerService(

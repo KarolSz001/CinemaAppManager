@@ -6,10 +6,10 @@ import com.app.model.MovieWithDateTime;
 import com.app.model.enums.Genre;
 import com.app.model.exception.AppException;
 import com.app.model.valid.CustomerValidator;
-import com.app.repo.CustomerRepository;
-import com.app.repo.LoyaltyCardRepository;
-import com.app.repo.MovieRepository;
-import com.app.repo.SalesStandRepository;
+import com.app.repo.impl.CustomerRepositoryImpl;
+import com.app.repo.impl.LoyaltyCardRepositoryImpl;
+import com.app.repo.impl.MovieRepositoryImpl;
+import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.dataGenerator.DataManager;
 import com.app.services.dataGenerator.MovieStoresJsonConverter;
 
@@ -21,24 +21,24 @@ import java.util.stream.Collectors;
 public class MovieService {
 
     private final String jsonFile = "movieTitle.json";
-    private final CustomerRepository customerRepository;
+    private final CustomerRepositoryImpl customerRepositoryImpl;
     private final CustomerValidator customerValidator;
-    private final SalesStandRepository salesStandRepository;
-    private final LoyaltyCardRepository loyaltyCardRepository;
-    private final MovieRepository movieRepository;
+    private final SalesStandRepositoryImpl salesStandRepositoryImpl;
+    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;
+    private final MovieRepositoryImpl movieRepositoryimpl;
 
     public MovieService(
-            CustomerRepository customerRepository,
+            CustomerRepositoryImpl customerRepositoryImpl,
             CustomerValidator customerValidator,
-            SalesStandRepository salesStandRepository,
-            LoyaltyCardRepository loyaltyCardRepository,
-            MovieRepository movieRepository) {
+            SalesStandRepositoryImpl salesStandRepositoryImpl,
+            LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl,
+            MovieRepositoryImpl movieRepositoryimpl) {
 
-        this.customerRepository = customerRepository;
-        this.movieRepository = movieRepository;
+        this.customerRepositoryImpl = customerRepositoryImpl;
+        this.movieRepositoryimpl = movieRepositoryimpl;
         this.customerValidator = customerValidator;
-        this.salesStandRepository = salesStandRepository;
-        this.loyaltyCardRepository = loyaltyCardRepository;
+        this.salesStandRepositoryImpl = salesStandRepositoryImpl;
+        this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
         loadMoviesToDataBase(jsonFile);
     }
 
@@ -51,7 +51,8 @@ public class MovieService {
         List<Movie> movies = movieStoresJsonConverter.fromJson().get();
         for (Movie movie : movies) {
             movie.setRelease_date(movie.getRelease_date().plusDays(1));
-            movieRepository.add(movie);
+//            System.out.println(movie);
+            movieRepositoryimpl.addOrUpdate(movie);
         }
     }
 
@@ -59,7 +60,7 @@ public class MovieService {
         if (movieId == null) {
             throw new AppException("null id number");
         }
-        movieRepository.delete(movieId);
+        movieRepositoryimpl.delete(movieId);
     }
 
     public void showMovieById(Integer id) {
@@ -87,7 +88,7 @@ public class MovieService {
     }
 
     public List<MovieWithDateTime> getInfo() {
-        return movieRepository.getInfo();
+        return movieRepositoryimpl.getInfo();
     }
 
     boolean isMoviesBaseEmpty() {
@@ -95,18 +96,18 @@ public class MovieService {
     }
 
     public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+        return movieRepositoryimpl.findAll();
     }
 
     public Movie getMovieById(Integer movieId) {
-        return movieRepository.findOne(movieId).orElseThrow(() -> new AppException(" Wrong ID number "));
+        return movieRepositoryimpl.findOne(movieId).orElseThrow(() -> new AppException(" Wrong ID number "));
     }
 
     public void addMovie(Movie movie) {
         if (movie == null) {
             throw new AppException("add movie null arg");
         }
-        movieRepository.add(movie);
+        movieRepositoryimpl.addOrUpdate(movie);
     }
 
 
@@ -125,7 +126,7 @@ public class MovieService {
     public void editMovieById() {
         Integer idMovie = DataManager.getInt(" GIVE MOVIE ID TO EDIT ");
         Movie movie = createMovie();
-        movieRepository.update(idMovie, movie);
+        movieRepositoryimpl.addOrUpdate(movie);
     }
 
     /**
@@ -138,7 +139,7 @@ public class MovieService {
     public void printStatisticByMoviePrice() {
 
         DecimalFormat dc = new DecimalFormat("#.##");
-        DoubleSummaryStatistics stats = movieRepository.findAll()
+        DoubleSummaryStatistics stats = movieRepositoryimpl.findAll()
                 .stream()
                 .collect(Collectors.summarizingDouble(Movie::getPrice));
         System.out.println("Statistic by movie Price");
@@ -151,7 +152,7 @@ public class MovieService {
 
     public void printStatisticByDurationTime() {
         DecimalFormat dc = new DecimalFormat("#.##");
-        IntSummaryStatistics stats = movieRepository.findAll()
+        IntSummaryStatistics stats = movieRepositoryimpl.findAll()
                 .stream()
                 .collect(Collectors.summarizingInt(Movie::getDuration));
         System.out.println("Statistic of duration Time");
@@ -165,7 +166,7 @@ public class MovieService {
     public void printMapOfGenreAndNumberMovies() {
         System.out.println("MAP WITH GENRE NAD NUMBER OF MOVIES");
         System.out.println("-----------------------------------------------------------------------------\n");
-        movieRepository.findAll()
+        movieRepositoryimpl.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(Movie::getGenre))
                 .entrySet()

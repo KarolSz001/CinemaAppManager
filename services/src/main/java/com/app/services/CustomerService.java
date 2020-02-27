@@ -3,14 +3,14 @@ package com.app.services;
 
 
 import com.app.model.Customer;
-import com.app.model.Loyalty_Card;
+import com.app.model.LoyaltyCard;
 import com.app.model.MovieWithDateTime;
 import com.app.model.exception.AppException;
 import com.app.model.valid.CustomerValidator;
-import com.app.repo.CustomerRepository;
-import com.app.repo.LoyaltyCardRepository;
-import com.app.repo.MovieRepository;
-import com.app.repo.SalesStandRepository;
+import com.app.repo.impl.CustomerRepositoryImpl;
+import com.app.repo.impl.LoyaltyCardRepositoryImpl;
+import com.app.repo.impl.MovieRepositoryImpl;
+import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.dataGenerator.DataGenerator;
 import com.app.services.dataGenerator.DataManager;
 
@@ -25,23 +25,23 @@ public class CustomerService {
 
     private static final Integer DISCOUNT_LIMIT = 1;
 
-    private final MovieRepository movieRepository;
-    private final CustomerRepository customerRepository;
+    private final MovieRepositoryImpl movieRepositoryimpl;
+    private final CustomerRepositoryImpl customerRepositoryImpl;
     private final CustomerValidator customerValidator;
-    private final SalesStandRepository salesStandRepository;
-    private final LoyaltyCardRepository loyaltyCardRepository;
+    private final SalesStandRepositoryImpl salesStandRepositoryImpl;
+    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;
 
     public CustomerService(
-            MovieRepository movieRepository,
-            CustomerRepository customerRepository,
+            MovieRepositoryImpl movieRepositoryimpl,
+            CustomerRepositoryImpl customerRepositoryImpl,
             CustomerValidator customerValidator,
-            SalesStandRepository salesStandRepository,
-            LoyaltyCardRepository loyaltyCardRepository) {
-        this.movieRepository = movieRepository;
-        this.customerRepository = customerRepository;
+            SalesStandRepositoryImpl salesStandRepositoryImpl,
+            LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl) {
+        this.movieRepositoryimpl = movieRepositoryimpl;
+        this.customerRepositoryImpl = customerRepositoryImpl;
         this.customerValidator = customerValidator;
-        this.salesStandRepository = salesStandRepository;
-        this.loyaltyCardRepository = loyaltyCardRepository;
+        this.salesStandRepositoryImpl = salesStandRepositoryImpl;
+        this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
     }
 
     public void addCustomer(Customer customer)  {
@@ -49,7 +49,7 @@ public class CustomerService {
             throw new AppException("customer is null");
         }
         if (validationCustomerBeforeAdd2(customer)) {
-            customerRepository.add(customer);
+            customerRepositoryImpl.addOrUpdate(customer);
         } else throw new AppException(" wrong validationCustomerBeforeAdd  ");
     }
 
@@ -63,15 +63,15 @@ public class CustomerService {
         if (id == null) {
             throw new AppException("null id number");
         }
-        customerRepository.delete(id);
+        customerRepositoryImpl.delete(id);
     }
 
     public List<Customer> findAll() {
-        return customerRepository.findAll();
+        return customerRepositoryImpl.findAll();
     }
 
     public Optional<Customer> getCustomerById(Integer customerId) {
-        return Optional.of(customerRepository.findOne(customerId).orElseThrow(() -> new AppException(" No customer found")));
+        return Optional.of(customerRepositoryImpl.findOne(customerId).orElseThrow(() -> new AppException(" No customer found")));
     }
 
     public Optional<Customer> getCustomerByEmail(String customerEmail) {
@@ -83,26 +83,26 @@ public class CustomerService {
     }
 
     public void updateCustomer(Customer customer) {
-        customerRepository.update(customer.getId(), customer);
+        customerRepositoryImpl.addOrUpdate(customer);
     }
 
     public boolean isCardAvailable(Integer customerId) {
         if (!hasLoyalCard(customerId)) {
-            return salesStandRepository.findAll().stream().filter(f -> f.getCustomerId().equals(customerId)).count() >= DISCOUNT_LIMIT;
+            return salesStandRepositoryImpl.findAll().stream().filter(f -> f.getCustomerId().equals(customerId)).count() >= DISCOUNT_LIMIT;
         }
         return false;
     }
 
     public boolean hasLoyalCard(Integer customerId) {
-        return customerRepository.findOne(customerId).get().getLoyalty_card_id() != null;
+        return customerRepositoryImpl.findOne(customerId).get().getLoyalty_card_id() != null;
     }
 
     public void addIdLoyalCardToCustomer(Integer idCard, Integer customerId) {
-        customerRepository.addIdLoyaltyCardToCustomer(idCard, customerId);
+        customerRepositoryImpl.addIdLoyaltyCardToCustomer(idCard, customerId);
     }
 
     public boolean isCardActive(Integer customerId) {
-        Integer idCard = customerRepository.findOne(customerId).get().getLoyalty_card_id();
+        Integer idCard = customerRepositoryImpl.findOne(customerId).get().getLoyalty_card_id();
         if (isCardActiveByNumberOfMovies(idCard) && isCardActiveByDate(idCard)) {
             System.out.println(" CARD IS STILL ACTIVE ");
             return true;
@@ -120,8 +120,8 @@ public class CustomerService {
         return !LocalDate.now().isAfter(getCardById(idCard).getExpirationDate());
     }
 
-    private Loyalty_Card getCardById(Integer id) {
-        return loyaltyCardRepository.findOne(id).get();
+    private LoyaltyCard getCardById(Integer id) {
+        return loyaltyCardRepositoryImpl.findOne(id).get();
     }
 
     public Customer getCustomerOperation() throws AppException {
@@ -213,7 +213,7 @@ public class CustomerService {
     }
 
     public void printCustomersByNumbersWatchedMovies() {
-        movieRepository.getInfo().stream()
+        movieRepositoryimpl.getInfo().stream()
                 .collect(Collectors.groupingBy(MovieWithDateTime::getEmail))
                 .entrySet()
                 .stream()
