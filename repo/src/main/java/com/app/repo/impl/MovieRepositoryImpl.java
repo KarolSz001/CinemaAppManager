@@ -9,7 +9,7 @@ import com.app.repo.generic.AbstractCrudRepository;
 
 import java.util.List;
 
-public class MovieRepositoryImpl extends AbstractCrudRepository<Movie, Integer> {
+public class MovieRepositoryImpl extends AbstractCrudRepository<Movie, Long> {
 
 
 

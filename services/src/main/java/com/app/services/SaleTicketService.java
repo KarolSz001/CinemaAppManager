@@ -64,9 +64,9 @@ public class SaleTicketService {
         DataManager.getLine(" PRESS KEY TO CONTINUE TO SEE WHAT WE HAVE TODAY TO WATCH ");
         System.out.println(" BELOW MOVIES WHICH ARE AVAILABLE TODAY ");
         movieService.showAllMoviesToday();
-        Integer idMovie = DataManager.getInt(" PRESS ID MOVIE NUMBER AS YOU CHOICE ");
+        Long idMovie = DataManager.getLong(" PRESS ID MOVIE NUMBER AS YOU CHOICE ");
         movieService.showMovieById(idMovie);
-        Integer customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
+        Long customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
         LocalDateTime dateTime = getDataTime();
 
         if (isCardAvailableForCustomer(customerId)) {
@@ -134,7 +134,7 @@ public class SaleTicketService {
         item.setPrice(priceAfterDiscount);
     }
 
-    private boolean hasDiscount(Integer customerId) {
+    private boolean hasDiscount(Long customerId) {
         if (!customerService.hasLoyalCard(customerId)) {
             return false;
         } else {
@@ -142,11 +142,11 @@ public class SaleTicketService {
         }
     }
 
-    private boolean isCardAvailableForCustomer(Integer customerId) {
+    private boolean isCardAvailableForCustomer(Long customerId) {
         return customerService.isCardAvailable(customerId);
     }
 
-    private boolean isLoyalCardActive(Integer customerId) {
+    private boolean isLoyalCardActive(Long customerId) {
         return customerService.isCardActive(customerId);
     }
 
@@ -160,13 +160,13 @@ public class SaleTicketService {
 
     private void addLoyalty(Customer customer) {
 
-        Integer customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
+        Long customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
         LocalDate date = LocalDate.now().plusMonths(1);
         LoyaltyCard loyaltyCard = new LoyaltyCard().builder().expirationDate(date).discount(DISCOUNT_VALUE).moviesNumber(MOVIES_LIMIT_NUMBER).current_movies_number(0).build();
         loyaltyCardRepositoryImpl.addOrUpdate(loyaltyCard);
         int sizeOfCardList = loyaltyCardRepositoryImpl.findAll().size();
         // get last added card
-        Integer idLoyaltyCard = loyaltyCardRepositoryImpl.findAll().get(sizeOfCardList - 1).getId();
+        Long idLoyaltyCard = loyaltyCardRepositoryImpl.findAll().get(sizeOfCardList - 1).getId();
         customerService.addIdLoyalCardToCustomer(idLoyaltyCard, customerId);
         System.out.println(" ADDED NEW LOYALTY_CARD FOR CUSTOMER \n");
     }
@@ -179,8 +179,8 @@ public class SaleTicketService {
         }
     }
 
-    private void increaseCurrentNumberMovieInLoyalCard(Integer itemId) {
-        Integer loyaltyCardId = customerService.getCustomerById(itemId).get().getLoyalty_card_id();
+    private void increaseCurrentNumberMovieInLoyalCard(Long itemId) {
+        Long loyaltyCardId = customerService.getCustomerById(itemId).get().getLoyaltyCardNumber();
         LoyaltyCard loyaltyCard = loyaltyCardRepositoryImpl.findOne(loyaltyCardId).get();
         int number = loyaltyCard.getCurrent_movies_number() + 1;
         loyaltyCard.setCurrent_movies_number(number);

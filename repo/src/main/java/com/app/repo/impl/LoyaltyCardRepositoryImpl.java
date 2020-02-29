@@ -7,5 +7,5 @@ import com.app.repo.generic.AbstractCrudRepository;
 
 
 
-public class LoyaltyCardRepositoryImpl extends AbstractCrudRepository<LoyaltyCard, Integer> {
+public class LoyaltyCardRepositoryImpl extends AbstractCrudRepository<LoyaltyCard, Long> {
 }

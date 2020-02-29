@@ -47,28 +47,29 @@ public class MovieService {
     * */
 
     public void loadMoviesToDataBase(String fileName) throws AppException {
-        MovieStoresJsonConverter movieStoresJsonConverter = new MovieStoresJsonConverter(fileName);
+       /* MovieStoresJsonConverter movieStoresJsonConverter = new MovieStoresJsonConverter(fileName);
         List<Movie> movies = movieStoresJsonConverter.fromJson().get();
         for (Movie movie : movies) {
-            movie.setRelease_date(movie.getRelease_date().plusDays(1));
+//            movie.setRelease_date(movie.getRelease_date().plusDays(1));
 //            System.out.println(movie);
             movieRepositoryimpl.addOrUpdate(movie);
-        }
+        }*/
+        movieRepositoryimpl.addOrUpdate(Movie.builder().title("RAMBO").build());
     }
 
-    public void removeMovieById(Integer movieId) {
+    public void removeMovieById(Long movieId) {
         if (movieId == null) {
             throw new AppException("null id number");
         }
         movieRepositoryimpl.delete(movieId);
     }
 
-    public void showMovieById(Integer id) {
+    public void showMovieById(Long id) {
         System.out.println(getMovieById(id));
     }
 
     public void removeMovieById() throws AppException {
-        Integer id = DataManager.getInt(" PRESS ID MOVIE NUMBER");
+        Long id = DataManager.getLong(" PRESS ID MOVIE NUMBER");
         removeMovieById(id);
     }
 
@@ -99,7 +100,7 @@ public class MovieService {
         return movieRepositoryimpl.findAll();
     }
 
-    public Movie getMovieById(Integer movieId) {
+    public Movie getMovieById(Long movieId) {
         return movieRepositoryimpl.findOne(movieId).orElseThrow(() -> new AppException(" Wrong ID number "));
     }
 

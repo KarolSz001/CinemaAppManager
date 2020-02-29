@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class MovieWithDateTime {
 
-    private Integer id;
+    private Long id;
     private String title;
     private LocalDateTime start_date_time;
     private Genre genre;

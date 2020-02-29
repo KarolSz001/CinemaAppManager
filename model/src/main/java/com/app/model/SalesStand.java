@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,13 +13,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 
-
+@Entity
+@Table(name="salestands")
 public class SalesStand {
-    Integer id;
-    Integer customerId;
-    Integer movieId;
-    LocalDateTime start_date_time;
-    Boolean discount;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private Long customerId;
+    private Long movieId;
+    private LocalDateTime start_date_time;
+    private Boolean discount;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "movie_id", unique = true)

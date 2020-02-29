@@ -72,7 +72,7 @@ public class ControlAppService {
                     break;
                 }
                 case 2: {
-                    Integer id = DataManager.getInt(" PRESS ID MOVIE NUMBER ");
+                    Long id = DataManager.getLong(" PRESS ID MOVIE NUMBER ");
                     movieService.showMovieById(id);
                     break;
                 }
@@ -176,7 +176,7 @@ public class ControlAppService {
                     break;
                 }
                 case 2: {
-                    Integer customerId = DataManager.getInt(" GIVE CUSTOMER ID ");
+                    Long customerId = DataManager.getLong(" GIVE CUSTOMER ID ");
                     customerService.getCustomerById(customerId);
                     break;
                 }

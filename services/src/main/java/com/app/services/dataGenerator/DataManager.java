@@ -22,6 +22,17 @@ public class DataManager {
         return Integer.parseInt(line);
     }
 
+    public static Long getLong(String message) {
+        System.out.println(message);
+
+        String line = sc.nextLine();
+        if (line == null || !line.matches("\\d+")) {
+            throw new AppException(" WRONG DATA ");
+        }
+
+        return Long.parseLong(line);
+    }
+
     public static Integer getDouble(String message) {
         System.out.println(message);
 

@@ -5,10 +5,10 @@ import com.app.model.Customer;
 import com.app.repo.generic.AbstractCrudRepository;
 
 
-public class CustomerRepositoryImpl extends AbstractCrudRepository<Customer, Integer> {
+public class CustomerRepositoryImpl extends AbstractCrudRepository<Customer, Long> {
 
 
-    public void addIdLoyaltyCardToCustomer(Integer idCard, Integer customerId){
+    public void addIdLoyaltyCardToCustomer(Long idCard, Long customerId){
         /*connection.withHandle(handle ->
                 handle
                 .createUpdate("UPDATE customer set loyalty_card_id = :loyalty_card_id WHERE id = :id;")
@@ -19,7 +19,7 @@ public class CustomerRepositoryImpl extends AbstractCrudRepository<Customer, Int
     }
 
 
-    public void removeLoyaltyCard(Integer customerId){
+    public void removeLoyaltyCard(Long customerId){
        /* connection.withHandle(handle ->
                 handle
                         .createUpdate("UPDATE customer set loyalty_card_id = :loyalty_card_id WHERE id = :id;")

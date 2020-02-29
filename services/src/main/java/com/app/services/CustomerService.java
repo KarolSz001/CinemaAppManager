@@ -59,7 +59,7 @@ public class CustomerService {
     }
 
 
-    public void removeCustomerById(Integer id) {
+    public void removeCustomerById(Long id) {
         if (id == null) {
             throw new AppException("null id number");
         }
@@ -70,7 +70,7 @@ public class CustomerService {
         return customerRepositoryImpl.findAll();
     }
 
-    public Optional<Customer> getCustomerById(Integer customerId) {
+    public Optional<Customer> getCustomerById(Long customerId) {
         return Optional.of(customerRepositoryImpl.findOne(customerId).orElseThrow(() -> new AppException(" No customer found")));
     }
 
@@ -86,23 +86,23 @@ public class CustomerService {
         customerRepositoryImpl.addOrUpdate(customer);
     }
 
-    public boolean isCardAvailable(Integer customerId) {
+    public boolean isCardAvailable(Long customerId) {
         if (!hasLoyalCard(customerId)) {
             return salesStandRepositoryImpl.findAll().stream().filter(f -> f.getCustomerId().equals(customerId)).count() >= DISCOUNT_LIMIT;
         }
         return false;
     }
 
-    public boolean hasLoyalCard(Integer customerId) {
-        return customerRepositoryImpl.findOne(customerId).get().getLoyalty_card_id() != null;
+    public boolean hasLoyalCard(Long customerId) {
+        return customerRepositoryImpl.findOne(customerId).get().getLoyaltyCardNumber() != null;
     }
 
-    public void addIdLoyalCardToCustomer(Integer idCard, Integer customerId) {
+    public void addIdLoyalCardToCustomer(Long idCard, Long customerId) {
         customerRepositoryImpl.addIdLoyaltyCardToCustomer(idCard, customerId);
     }
 
-    public boolean isCardActive(Integer customerId) {
-        Integer idCard = customerRepositoryImpl.findOne(customerId).get().getLoyalty_card_id();
+    public boolean isCardActive(Long customerId) {
+        Long idCard = customerRepositoryImpl.findOne(customerId).get().getLoyaltyCardNumber();
         if (isCardActiveByNumberOfMovies(idCard) && isCardActiveByDate(idCard)) {
             System.out.println(" CARD IS STILL ACTIVE ");
             return true;
@@ -112,15 +112,15 @@ public class CustomerService {
         }
     }
 
-    private boolean isCardActiveByNumberOfMovies(Integer idCard) {
+    private boolean isCardActiveByNumberOfMovies(Long idCard) {
         return getCardById(idCard).getCurrent_movies_number() < getCardById(idCard).getMoviesNumber();
     }
 
-    private boolean isCardActiveByDate(Integer idCard) {
+    private boolean isCardActiveByDate(Long idCard) {
         return !LocalDate.now().isAfter(getCardById(idCard).getExpirationDate());
     }
 
-    private LoyaltyCard getCardById(Integer id) {
+    private LoyaltyCard getCardById(Long id) {
         return loyaltyCardRepositoryImpl.findOne(id).get();
     }
 
@@ -165,12 +165,12 @@ public class CustomerService {
     }
 
     public void editCustomerById() throws AppException {
-        Customer customer = getCustomerById(DataManager.getInt(" PRESS ID CUSTOMER ")).get();
+        Customer customer = getCustomerById(DataManager.getLong(" PRESS ID CUSTOMER ")).get();
         updateCustomer(customer);
     }
 
     public void removeCustomerById() throws AppException {
-        removeCustomerById(DataManager.getInt(" PRESS ID CUSTOMER "));
+        removeCustomerById(DataManager.getLong(" PRESS ID CUSTOMER "));
     }
 
 
@@ -186,7 +186,7 @@ public class CustomerService {
     private void printFormattedCustomer(Customer s) {
         System.out.println("-----------------------------------------------------------------------------\n");
         System.out.printf("%5s %15s %25s %15s %15s", "CUSTOMER ID", "NAME", "SURNAME", "AGE", "EMAIL", "Card_Id \n");
-        System.out.format("\n %5s %20s %25s %15s %20s \n", s.getId(), s.getName(), s.getSurname(), s.getAge(), s.getEmail(), s.getLoyalty_card_id());
+        System.out.format("\n %5s %20s %25s %15s %20s \n", s.getId(), s.getName(), s.getSurname(), s.getAge(), s.getEmail(), s.getLoyaltyCardNumber());
         System.out.println("-----------------------------------------------------------------------------\n");
 
     }
@@ -205,7 +205,7 @@ public class CustomerService {
 
 
     public List<Customer> getAllCustomersWithLoyaltyCard() {
-        return findAll().stream().filter(f -> f.getLoyalty_card_id() != null).peek(System.out::println).collect(Collectors.toList());
+        return findAll().stream().filter(f -> f.getLoyaltyCardNumber() != null).peek(System.out::println).collect(Collectors.toList());
     }
 
     public void sortCustomerBySurname() {

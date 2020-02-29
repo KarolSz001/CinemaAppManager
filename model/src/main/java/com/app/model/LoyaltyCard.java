@@ -1,25 +1,29 @@
 package com.app.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 
+@Entity
+@Table(name="loyalty_cards")
 public class LoyaltyCard {
-    Integer id;
-    LocalDate expirationDate;
-    Double discount;
-    Integer moviesNumber;
-    Integer current_movies_number;
 
-    @OneToOne(mappedBy = "license")
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private LocalDate expirationDate;
+    private Double discount;
+    private Integer moviesNumber;
+    private Integer current_movies_number;
+
+    @OneToOne(mappedBy = "loyaltyCard")
     private Customer customer;
 }

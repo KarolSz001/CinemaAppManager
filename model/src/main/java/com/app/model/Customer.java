@@ -2,24 +2,29 @@ package com.app.model;
 
 import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
+@Entity
+@Table(name="customers")
 public class Customer {
 
-    Integer id;
-    String name;
-    String surname;
-    Integer age;
-    String email;
-    Integer loyalty_card_id;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String name;
+    private String surname;
+    private Integer age;
+    private String email;
+    private Long loyaltyCardNumber;
+
+
 
     @OneToMany(mappedBy = "customer")
     @ToString.Exclude
@@ -27,7 +32,7 @@ public class Customer {
     private Set<SalesStand> salesStands;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "loyalty_card_id", unique = true)
+    @JoinColumn(name = "loyaltycard_id", unique = true)
     private LoyaltyCard loyaltyCard;
 
 }

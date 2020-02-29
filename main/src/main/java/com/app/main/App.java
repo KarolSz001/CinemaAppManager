@@ -22,11 +22,14 @@ public class App {
         sb.append(" ----------------------------------------------------------------------------- \n");
         System.out.println(sb.toString());
 
+
+        var customerValidator = new CustomerValidator();
+
         var movieRepository = new MovieRepositoryImpl();
         var customerRepository = new CustomerRepositoryImpl();
-        var customerValidator = new CustomerValidator();
-        var salesStandRepository = new SalesStandRepositoryImpl();
         var loyaltyCardRepository = new LoyaltyCardRepositoryImpl();
+        var salesStandRepository = new SalesStandRepositoryImpl();
+
         var saleTicketService = new SaleTicketService();
 
         var customerService = new CustomerService(

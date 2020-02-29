@@ -12,8 +12,7 @@
     <class>com.app.model.LoyaltyCard</class>
     <class>com.app.model.Movie</class>
     <class>com.app.model.SalesStand</class>
-
-
+    <class>com.app.model.MovieWithDateTime</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
