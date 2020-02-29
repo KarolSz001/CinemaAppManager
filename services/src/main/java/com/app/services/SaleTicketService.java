@@ -13,6 +13,8 @@ import com.app.repo.impl.LoyaltyCardRepositoryImpl;
 import com.app.repo.impl.MovieRepositoryImpl;
 import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.dataGenerator.DataManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -25,21 +27,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+@Component
 public class SaleTicketService {
 
     private final MovieRepositoryImpl movieRepositoryimpl = new MovieRepositoryImpl();
     private final CustomerRepositoryImpl customerRepositoryImpl = new CustomerRepositoryImpl();
-    private final CustomerValidator customerValidator = new CustomerValidator();
+//    private final CustomerValidator customerValidator = new CustomerValidator();
     private final SalesStandRepositoryImpl salesStandRepositoryImpl = new SalesStandRepositoryImpl();
     private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl = new LoyaltyCardRepositoryImpl();
-    private final MovieService movieService = new MovieService(customerRepositoryImpl, customerValidator, salesStandRepositoryImpl, loyaltyCardRepositoryImpl, movieRepositoryimpl);
-    private final CustomerService customerService = new CustomerService(movieRepositoryimpl, customerRepositoryImpl, customerValidator, salesStandRepositoryImpl, loyaltyCardRepositoryImpl);
+    private final MovieService movieService = new MovieService( movieRepositoryimpl);
+    private final CustomerService customerService = new CustomerService(movieRepositoryimpl, customerRepositoryImpl, salesStandRepositoryImpl, loyaltyCardRepositoryImpl);
 
     private static final LocalTime HIGH_RANGE_TIME = LocalTime.of(22, 30);
     private static final Integer MOVIES_LIMIT_NUMBER = 2;
     private static final Double DISCOUNT_VALUE = 8.0;
 
-
+    @Autowired
     public SaleTicketService() {
     }
 

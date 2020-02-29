@@ -12,33 +12,35 @@ import com.app.repo.impl.MovieRepositoryImpl;
 import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.dataGenerator.DataManager;
 import com.app.services.dataGenerator.MovieStoresJsonConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Component
 public class MovieService {
 
     private final String jsonFile = "movieTitle.json";
-    private final CustomerRepositoryImpl customerRepositoryImpl;
+  /*  private final CustomerRepositoryImpl customerRepositoryImpl;
     private final CustomerValidator customerValidator;
     private final SalesStandRepositoryImpl salesStandRepositoryImpl;
-    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;
+    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;*/
     private final MovieRepositoryImpl movieRepositoryimpl;
-
+    @Autowired
     public MovieService(
-            CustomerRepositoryImpl customerRepositoryImpl,
+            /*CustomerRepositoryImpl customerRepositoryImpl,
             CustomerValidator customerValidator,
             SalesStandRepositoryImpl salesStandRepositoryImpl,
-            LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl,
+            LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl,*/
             MovieRepositoryImpl movieRepositoryimpl) {
 
-        this.customerRepositoryImpl = customerRepositoryImpl;
+//        this.customerRepositoryImpl = customerRepositoryImpl;
         this.movieRepositoryimpl = movieRepositoryimpl;
-        this.customerValidator = customerValidator;
-        this.salesStandRepositoryImpl = salesStandRepositoryImpl;
-        this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
+//        this.customerValidator = customerValidator;
+//        this.salesStandRepositoryImpl = salesStandRepositoryImpl;
+//        this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
         loadMoviesToDataBase(jsonFile);
     }
 

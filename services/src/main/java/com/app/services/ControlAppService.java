@@ -6,14 +6,17 @@ import com.app.model.Movie;
 import com.app.services.dataGenerator.DataManager;
 import com.app.model.exception.AppException;
 import com.app.services.screen.MenuPrinter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ControlAppService {
 
     private final CustomerService customerService;
     private final MovieService movieService;
     private final SaleTicketService saleTicketService;
 
-
+    @Autowired
     public ControlAppService(CustomerService customerService, MovieService movieService, SaleTicketService saleTicketService) {
         this.customerService = customerService;
         this.movieService = movieService;

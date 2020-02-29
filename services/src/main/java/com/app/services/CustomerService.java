@@ -13,6 +13,8 @@ import com.app.repo.impl.MovieRepositoryImpl;
 import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.dataGenerator.DataGenerator;
 import com.app.services.dataGenerator.DataManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -20,26 +22,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Component
 public class CustomerService {
 
     private static final Integer DISCOUNT_LIMIT = 1;
 
     private final MovieRepositoryImpl movieRepositoryimpl;
     private final CustomerRepositoryImpl customerRepositoryImpl;
-    private final CustomerValidator customerValidator;
     private final SalesStandRepositoryImpl salesStandRepositoryImpl;
     private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;
-
+    @Autowired
     public CustomerService(
             MovieRepositoryImpl movieRepositoryimpl,
             CustomerRepositoryImpl customerRepositoryImpl,
-            CustomerValidator customerValidator,
             SalesStandRepositoryImpl salesStandRepositoryImpl,
             LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl) {
         this.movieRepositoryimpl = movieRepositoryimpl;
         this.customerRepositoryImpl = customerRepositoryImpl;
-        this.customerValidator = customerValidator;
         this.salesStandRepositoryImpl = salesStandRepositoryImpl;
         this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
     }

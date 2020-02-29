@@ -10,6 +10,8 @@ import com.app.services.ControlAppService;
 import com.app.services.CustomerService;
 import com.app.services.MovieService;
 import com.app.services.SaleTicketService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 public class App {
 
@@ -23,7 +25,7 @@ public class App {
         System.out.println(sb.toString());
 
 
-        var customerValidator = new CustomerValidator();
+        /*var customerValidator = new CustomerValidator();
 
         var movieRepository = new MovieRepositoryImpl();
         var customerRepository = new CustomerRepositoryImpl();
@@ -33,10 +35,14 @@ public class App {
         var saleTicketService = new SaleTicketService();
 
         var customerService = new CustomerService(
-                movieRepository, customerRepository, customerValidator, salesStandRepository, loyaltyCardRepository);
-        var movieService = new MovieService(customerRepository, customerValidator, salesStandRepository, loyaltyCardRepository, movieRepository);
+                movieRepository, customerRepository, salesStandRepository, loyaltyCardRepository);
+        var movieService = new MovieService(customerRepository, customerValidator, salesStandRepository, loyaltyCardRepository, movieRepository);*/
 
-        var controlAppService = new ControlAppService(customerService,movieService,saleTicketService);
+//        var controlAppService = new ControlAppService(customerService,movieService,saleTicketService);
+
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        ControlAppService controlAppService =  context.getBean(ControlAppService.class);
         controlAppService.controlLoop();
+
     }
 }

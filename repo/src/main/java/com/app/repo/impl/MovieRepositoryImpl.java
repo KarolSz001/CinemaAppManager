@@ -4,14 +4,15 @@ package com.app.repo.impl;
 import com.app.model.Movie;
 import com.app.model.MovieWithDateTime;
 import com.app.repo.generic.AbstractCrudRepository;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.util.List;
-
+@Component
 public class MovieRepositoryImpl extends AbstractCrudRepository<Movie, Long> {
-
-
+    @Autowired
+public MovieRepositoryImpl(){super();}
 
     public List<MovieWithDateTime> getInfo() {
        /* return connection.withHandle(handle ->
