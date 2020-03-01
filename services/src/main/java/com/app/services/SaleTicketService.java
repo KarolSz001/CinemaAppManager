@@ -35,7 +35,7 @@ public class SaleTicketService {
 //    private final CustomerValidator customerValidator = new CustomerValidator();
     private final SalesStandRepositoryImpl salesStandRepositoryImpl = new SalesStandRepositoryImpl();
     private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl = new LoyaltyCardRepositoryImpl();
-    private final MovieService movieService = new MovieService( movieRepositoryimpl);
+    private final MovieService movieService = new MovieService( movieRepositoryimpl,loyaltyCardRepositoryImpl);
     private final CustomerService customerService = new CustomerService(movieRepositoryimpl, customerRepositoryImpl, salesStandRepositoryImpl, loyaltyCardRepositoryImpl);
 
     private static final LocalTime HIGH_RANGE_TIME = LocalTime.of(22, 30);
@@ -56,6 +56,10 @@ public class SaleTicketService {
      * - discountPriceTicket(movieWithDateTime);
      * - addLoyalty(customer)
      */
+
+    public void clearDataSale(){
+        salesStandRepositoryImpl.deleteAll();
+    }
 
     public void saleTicketOperation(Customer customer) throws AppException {
         if (customer == null) {

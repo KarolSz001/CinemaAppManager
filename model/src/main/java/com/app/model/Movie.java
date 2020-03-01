@@ -23,6 +23,7 @@ public class Movie {
 
     private String title;
     private Genre genre;
+    private String cityName;
     private Double price;
     private Integer duration;
     private LocalDate release_date;

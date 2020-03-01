@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControlAppService {
 
-    private final CustomerService customerService;
-    private final MovieService movieService;
-    private final SaleTicketService saleTicketService;
+    private CustomerService customerService;
+    private MovieService movieService;
+    private SaleTicketService saleTicketService;
 
     @Autowired
     public ControlAppService(CustomerService customerService, MovieService movieService, SaleTicketService saleTicketService) {
@@ -34,6 +34,7 @@ public class ControlAppService {
                 switch (read) {
                     case 0: {
                         MenuPrinter.printExit();
+                        clearDb();
                         return;
                     }
                     case 1: {
@@ -214,6 +215,15 @@ public class ControlAppService {
                 }
             }
         }
+    }
+
+    private void clearDb(){
+        System.out.println("CLEAR DB -------------------------- IN PROGRESS");
+        saleTicketService.clearDataSale();
+        movieService.clearDataMovie();
+        customerService.clearDataCustomer();
+
+
     }
 
 

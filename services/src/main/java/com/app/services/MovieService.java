@@ -19,44 +19,46 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
 @Component
 public class MovieService {
 
     private final String jsonFile = "movieTitle.json";
-  /*  private final CustomerRepositoryImpl customerRepositoryImpl;
-    private final CustomerValidator customerValidator;
-    private final SalesStandRepositoryImpl salesStandRepositoryImpl;
-    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;*/
+    private final LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl;
     private final MovieRepositoryImpl movieRepositoryimpl;
+    private Long counter = 0l;
+
     @Autowired
     public MovieService(
-            /*CustomerRepositoryImpl customerRepositoryImpl,
-            CustomerValidator customerValidator,
-            SalesStandRepositoryImpl salesStandRepositoryImpl,
-            LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl,*/
-            MovieRepositoryImpl movieRepositoryimpl) {
-
-//        this.customerRepositoryImpl = customerRepositoryImpl;
+            MovieRepositoryImpl movieRepositoryimpl,
+            LoyaltyCardRepositoryImpl loyaltyCardRepositoryImpl) {
         this.movieRepositoryimpl = movieRepositoryimpl;
-//        this.customerValidator = customerValidator;
-//        this.salesStandRepositoryImpl = salesStandRepositoryImpl;
-//        this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
+        this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
         loadMoviesToDataBase(jsonFile);
     }
 
     /**
      * Method loads movie records from file to dataBase, one by one in loop;
-    * */
+     */
 
     public void loadMoviesToDataBase(String fileName) throws AppException {
-       /* MovieStoresJsonConverter movieStoresJsonConverter = new MovieStoresJsonConverter(fileName);
+        MovieStoresJsonConverter movieStoresJsonConverter = new MovieStoresJsonConverter(fileName);
         List<Movie> movies = movieStoresJsonConverter.fromJson().get();
         for (Movie movie : movies) {
-//            movie.setRelease_date(movie.getRelease_date().plusDays(1));
-//            System.out.println(movie);
+            addCityNameToMovie(movie);
+            System.out.println(movie);
             movieRepositoryimpl.addOrUpdate(movie);
-        }*/
-        movieRepositoryimpl.addOrUpdate(Movie.builder().title("RAMBO").build());
+        }
+    }
+
+    private void addCityNameToMovie(Movie movie) {
+        movie.setCityName((counter++) % 2 == 0 ? "KRAKOW" : "WARSZAWA");
+    }
+
+    public void clearDataMovie() {
+        movieRepositoryimpl.deleteAll();
+        loyaltyCardRepositoryImpl.deleteAll();
+
     }
 
     public void removeMovieById(Long movieId) {
@@ -80,14 +82,15 @@ public class MovieService {
             System.out.println(" DATABASE IS EMPTY \n");
         } else {
             System.out.println("-----------------------------------------------------------------------------\n");
-            System.out.printf("%5s %40s %25s %15s %15s %15s", "MOVIE ID", "TITLE", "GRADE", "DURATION", "PRICE", "RELEASE DATA\n");
-            getAllMovies().stream().filter(f -> f.getRelease_date().equals(LocalDate.now())).forEach(this::printFormattedMovie);
+            System.out.printf("%5s %40s %25s %25s %15s %15s %15s", "MOVIE ID", "TITLE", "CITY", "GRADE", "DURATION", "PRICE", "RELEASE DATA\n");
+//            getAllMovies().stream().filter(f -> f.getRelease_date().equals(LocalDate.now())).forEach(this::printFormattedMovie);
+            getAllMovies().stream().forEach(this::printFormattedMovie);
             System.out.println("-----------------------------------------------------------------------------\n");
         }
     }
 
     private void printFormattedMovie(Movie s) {
-        System.out.format("%5s %50s %20s %10d %20s %15s \n", s.getId(), s.getTitle(), s.getGenre(), s.getDuration(), s.getPrice(), s.getRelease_date());
+        System.out.format("%5s %50s %20s %20s %10d %20s %15s \n", s.getId(), s.getTitle(), s.getGenre(), s.getCityName(), s.getDuration(), s.getPrice(), s.getRelease_date());
     }
 
     public List<MovieWithDateTime> getInfo() {
@@ -137,7 +140,7 @@ public class MovieService {
      * printStatisticByMoviePrice()
      * printStatisticByDurationTime()
      * printMapOfGenreAndNumberMovies()
-     * */
+     */
 
     public void printStatisticByMoviePrice() {
 

@@ -43,6 +43,10 @@ public class CustomerService {
         this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
     }
 
+    public void clearDataCustomer(){
+        customerRepositoryImpl.deleteAll();
+    }
+
     public void addCustomer(Customer customer)  {
         if (customer == null) {
             throw new AppException("customer is null");
