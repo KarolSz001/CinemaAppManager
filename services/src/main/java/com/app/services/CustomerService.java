@@ -199,7 +199,9 @@ public class CustomerService {
         String surname = DataManager.getLine(" GIVE SURNAME ");
         Integer age = DataManager.getInt(" GIVE AGE ");
         String email = DataManager.getLine(" GIVE EMAIL ");
-        return new Customer().builder().id(null).name(name).surname(surname).age(age).email(email).build();
+        String pass = DataManager.getLine(" SETUP PASS ");
+        Boolean admin = DataManager.getBoolean(" ADMIN Y / N ?");
+        return new Customer().builder().id(null).name(name).surname(surname).age(age).email(email).password(pass).admin(admin).build();
     }
 
     boolean isCustomerBaseEmpty() {

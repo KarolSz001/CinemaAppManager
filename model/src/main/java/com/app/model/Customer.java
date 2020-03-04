@@ -22,7 +22,9 @@ public class Customer {
     private String surname;
     private Integer age;
     private String email;
+    private String password;
     private Long loyaltyCardNumber;
+    private Boolean admin;
 
 
 
