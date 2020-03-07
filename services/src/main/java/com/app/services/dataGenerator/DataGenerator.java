@@ -34,7 +34,6 @@ public class DataGenerator {
     }
 
 
-
     public static List<String> readTxtFile() {
         List<String> list = new ArrayList<>();
         try {
@@ -95,8 +94,13 @@ public class DataGenerator {
         String surname = String.valueOf(Surname.randomSurNameGenrator());
         Integer age = new Random().nextInt(maxAge - minAge) + minAge;
         String email = emailGenerator(name, surname);
+        Boolean admin = adminRulesRandom();
 
-        return Customer.builder().name(name).surname(surname).age(age).email(email).build();
+        return Customer.builder().name(name).surname(surname).age(age).email(email).admin(admin).build();
+    }
+
+    private static Boolean adminRulesRandom() {
+        return Math.random() < 0.5;
     }
 
     private enum Name {

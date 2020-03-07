@@ -169,6 +169,9 @@ public class CustomerService {
 
     public void editCustomerById() throws AppException {
         Customer customer = getCustomerById(DataManager.getLong(" PRESS ID CUSTOMER ")).get();
+        Long id = customer.getId();
+        customer = creatCustomer();
+        customer.setId(id);
         updateCustomer(customer);
     }
 
