@@ -38,21 +38,21 @@ public class ControlAppService {
                         return;
                     }
                     case 1: {
-                        customerOperation();
+                        loginOperation();
                         break;
                     }
                     case 2: {
-                        moviesOperation();
+                        singinOperation();
                         break;
                     }
-                    case 3: {
+                  /*  case 3: {
                         saleOperation();
                         break;
                     }
                     case 4: {
                         statOperation();
                         break;
-                    }
+                    }*/
                 }
             }
         } catch (AppException e) {
@@ -61,7 +61,7 @@ public class ControlAppService {
         }
     }
 
-    public void moviesOperation() throws AppException {
+    private void moviesOperation() throws AppException {
         while (true) {
             MenuPrinter.printMoviesMenu();
             System.out.println();
@@ -102,7 +102,19 @@ public class ControlAppService {
         }
     }
 
-    public void statOperation() throws AppException {
+    private void singinOperation() {
+
+
+    }
+
+    private void loginOperation() {
+        System.out.println(" PLZ LOGIN \n");
+        String login = DataManager.getLine(" GIVE YOU LOGIN ");
+        Customer customer = customerService.findCustomerByLogin();
+
+    }
+
+    private void statOperation() throws AppException {
         while (true) {
             System.out.println(" WELCOME TO STATIC MENU \n");
             MenuPrinter.printStatisticMenu();
@@ -128,7 +140,7 @@ public class ControlAppService {
         }
     }
 
-    public void saleOperation() throws AppException {
+    private void saleOperation() throws AppException {
         while (true) {
             System.out.println(" WELCOME TO SERVICE TICKETS SERVICES ");
             Customer customer = customerService.getCustomerOperation();
@@ -163,7 +175,7 @@ public class ControlAppService {
         }
     }
 
-    public void customerOperation() throws AppException {
+    private void customerOperation() throws AppException {
 
         while (true) {
             MenuPrinter.printCustomersMenu();
@@ -217,7 +229,7 @@ public class ControlAppService {
         }
     }
 
-    private void clearDb(){
+    private void clearDb() {
         System.out.println("CLEAR DB -------------------------- IN PROGRESS");
         saleTicketService.clearDataSale();
         movieService.clearDataMovie();

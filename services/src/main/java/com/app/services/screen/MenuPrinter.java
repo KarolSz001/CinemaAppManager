@@ -7,13 +7,10 @@ public class MenuPrinter {
 
     public static void startMenu() {
         sb.setLength(0);
-        sb.append("-----------------------------------------------------------------------------\n");
-        sb.append(" MAIN LOOP MENU \n");
+        sb.append("----------------WELCOME IN CINEMA_APP_MANAGER--------------------\n");
         sb.append(" 0 - EXIT PROGRAM \n");
-        sb.append(" 1 - CUSTOMERS MENU \n");
-        sb.append(" 2 - MOVIES MENU \n");
-        sb.append(" 3 - SALE TICKETS SERVICE \n");
-        sb.append(" 4 - STATISTIC APP \n");
+        sb.append(" 1 - LOGIN \n");
+        sb.append(" 2 - SINGIN \n");
         sb.append("-----------------------------------------------------------------------------\n");
         System.out.println(sb.toString());
     }

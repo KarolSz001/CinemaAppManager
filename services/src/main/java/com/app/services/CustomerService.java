@@ -43,6 +43,11 @@ public class CustomerService {
         this.loyaltyCardRepositoryImpl = loyaltyCardRepositoryImpl;
     }
 
+
+    public Customer findCustomerByLogin(String email){
+       return customerRepositoryImpl.findByLogin(email).orElseThrow(()-> new AppException("NO RECORDS FOUND"));
+    }
+
     public void clearDataCustomer(){
         customerRepositoryImpl.deleteAll();
     }
@@ -61,10 +66,9 @@ public class CustomerService {
         return customerValidator.isValidate(customer) && (!isEmailAlreadyExist(customer.getEmail()));
     }
 
-
     public void removeCustomerById(Long id) {
         if (id == null) {
-            throw new AppException("null id number");
+            throw new AppException(" NULL ARGUMENT ");
         }
         customerRepositoryImpl.delete(id);
     }
@@ -73,16 +77,16 @@ public class CustomerService {
         return customerRepositoryImpl.findAll();
     }
 
-    public Optional<Customer> getCustomerById(Long customerId) {
-        return Optional.of(customerRepositoryImpl.findOne(customerId).orElseThrow(() -> new AppException(" No customer found")));
+    public Customer getCustomerById(Long customerId) {
+        return customerRepositoryImpl.findOne(customerId).orElseThrow(() -> new AppException(" NO CUSTOMER FOUND"));
     }
 
-    public Optional<Customer> getCustomerByEmail(String customerEmail) {
-        return Optional.of(findAll().stream().filter(f -> f.getEmail().equals(customerEmail)).findFirst()).orElseThrow(() -> new AppException(" No customer found"));
+    public Customer getCustomerByEmail(String customerEmail) {
+        return customerRepositoryImpl.findByEmail(customerEmail).orElseThrow(()-> new AppException(" NO CUSTOMER FOUND"));
     }
 
-    private boolean isEmailAlreadyExist(String email) throws AppException {
-        return getCustomerByEmail(email).isPresent();
+    private boolean isEmailAlreadyExist(String email) {
+        return Optional.ofNullable(getCustomerByEmail(email)).isPresent();
     }
 
     public void updateCustomer(Customer customer) {
@@ -101,7 +105,7 @@ public class CustomerService {
     }
 
     public void addIdLoyalCardToCustomer(Long idCard, Long customerId) {
-        customerRepositoryImpl.addIdLoyaltyCardToCustomer(idCard, customerId);
+//        customerRepositoryImpl.addIdLoyaltyCardToCustomer(idCard, customerId);
     }
 
     public boolean isCardActive(Long customerId) {
@@ -134,22 +138,16 @@ public class CustomerService {
         Customer customer;
         System.out.println(" CHECKING DATABASE BY EMAIL CUSTOMER ");
 
-        if (getCustomerByEmail(email).isPresent()) {
+        if (isEmailAlreadyExist(email)) {
             System.out.println(" CUSTOMER AVAILABLE ");
-            customer = getCustomerByEmail(email).get();
-
+            customer = getCustomerByEmail(email);
         } else {
             System.out.println(" NO CUSTOMER IN DATABASE , LET'S CREATE ONE ");
             customer = singleCustomerCreator();
-            if (getCustomerByEmail(email).isPresent()) {
-                throw new AppException(" EMAIL IS ALREADY EXIST IN DATABASE ");
-            }
             if (!validationCustomerBeforeAdd2(customer)) {
                 throw new AppException(" VALIDATION CUSTOMER ERROR ");
             }
-
         }
-
         System.out.println(" CREATED CUSTOMER ---->>>>> " + customer);
         return customer;
     }
@@ -168,7 +166,7 @@ public class CustomerService {
     }
 
     public void editCustomerById() throws AppException {
-        Customer customer = getCustomerById(DataManager.getLong(" PRESS ID CUSTOMER ")).get();
+        Customer customer = getCustomerById(DataManager.getLong(" PRESS ID CUSTOMER "));
         Long id = customer.getId();
         customer = creatCustomer();
         customer.setId(id);
