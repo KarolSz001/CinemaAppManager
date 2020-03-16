@@ -110,7 +110,7 @@ public class ControlAppService {
     private void loginOperation() {
         System.out.println(" PLZ LOGIN \n");
         String login = DataManager.getLine(" GIVE YOU LOGIN ");
-        Customer customer = customerService.findCustomerByLogin();
+        Customer customer = customerService.findCustomerByLogin(login);
 
     }
 

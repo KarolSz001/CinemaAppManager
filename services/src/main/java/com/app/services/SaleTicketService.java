@@ -7,7 +7,6 @@ import com.app.model.MovieWithDateTime;
 import com.app.model.SalesStand;
 import com.app.model.enums.Genre;
 import com.app.model.exception.AppException;
-import com.app.model.valid.CustomerValidator;
 import com.app.repo.impl.CustomerRepositoryImpl;
 import com.app.repo.impl.LoyaltyCardRepositoryImpl;
 import com.app.repo.impl.MovieRepositoryImpl;
@@ -73,7 +72,7 @@ public class SaleTicketService {
         movieService.showAllMoviesToday();
         Long idMovie = DataManager.getLong(" PRESS ID MOVIE NUMBER AS YOU CHOICE ");
         movieService.showMovieById(idMovie);
-        Long customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
+        Long customerId = customerService.getCustomerByEmail(customer.getEmail()).getId();
         LocalDateTime dateTime = getDataTime();
 
         if (isCardAvailableForCustomer(customerId)) {
@@ -167,7 +166,7 @@ public class SaleTicketService {
 
     private void addLoyalty(Customer customer) {
 
-        Long customerId = customerService.getCustomerByEmail(customer.getEmail()).get().getId();
+        Long customerId = customerService.getCustomerByEmail(customer.getEmail()).getId();
         LocalDate date = LocalDate.now().plusMonths(1);
         LoyaltyCard loyaltyCard = new LoyaltyCard().builder().expirationDate(date).discount(DISCOUNT_VALUE).moviesNumber(MOVIES_LIMIT_NUMBER).current_movies_number(0).build();
         loyaltyCardRepositoryImpl.addOrUpdate(loyaltyCard);
@@ -187,7 +186,7 @@ public class SaleTicketService {
     }
 
     private void increaseCurrentNumberMovieInLoyalCard(Long itemId) {
-        Long loyaltyCardId = customerService.getCustomerById(itemId).get().getLoyaltyCardNumber();
+        Long loyaltyCardId = customerService.getCustomerById(itemId).getLoyaltyCardNumber();
         LoyaltyCard loyaltyCard = loyaltyCardRepositoryImpl.findOne(loyaltyCardId).get();
         int number = loyaltyCard.getCurrent_movies_number() + 1;
         loyaltyCard.setCurrent_movies_number(number);
