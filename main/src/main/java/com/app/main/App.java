@@ -1,15 +1,7 @@
 package com.app.main;
 
 
-import com.app.model.valid.CustomerValidator;
-import com.app.repo.impl.CustomerRepositoryImpl;
-import com.app.repo.impl.LoyaltyCardRepositoryImpl;
-import com.app.repo.impl.MovieRepositoryImpl;
-import com.app.repo.impl.SalesStandRepositoryImpl;
 import com.app.services.ControlAppService;
-import com.app.services.CustomerService;
-import com.app.services.MovieService;
-import com.app.services.SaleTicketService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
@@ -41,7 +33,7 @@ public class App {
 //        var controlAppService = new ControlAppService(customerService,movieService,saleTicketService);
 
         AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-        ControlAppService controlAppService =  context.getBean(ControlAppService.class);
+        var controlAppService =  context.getBean(ControlAppService.class);
         controlAppService.controlLoop();
 
     }

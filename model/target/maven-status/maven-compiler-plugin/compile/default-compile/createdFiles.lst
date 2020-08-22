@@ -1,0 +1,17 @@
+com\app\model\valid\generic\Validator.class
+com\app\model\MovieWithDateTime$MovieWithDateTimeBuilder.class
+com\app\model\enums\Genre.class
+com\app\model\Movie$MovieBuilder.class
+com\app\model\valid\CustomerValidator2.class
+com\app\model\enums\TablesDb.class
+com\app\model\LoyaltyCard$LoyaltyCardBuilder.class
+com\app\model\SalesStand$SalesStandBuilder.class
+com\app\model\LoyaltyCard.class
+com\app\model\exception\AppException.class
+com\app\model\Customer.class
+com\app\model\valid\CustomerValidator.class
+com\app\model\SalesStand.class
+com\app\model\valid\generic\AbstractValidator.class
+com\app\model\Customer$CustomerBuilder.class
+com\app\model\Movie.class
+com\app\model\MovieWithDateTime.class
