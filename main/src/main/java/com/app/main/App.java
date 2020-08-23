@@ -11,7 +11,7 @@ public class App {
 
         StringBuilder sb = new StringBuilder();
         sb.append(" ----------------------------------------------------------------------------- \n");
-        sb.append(" CinemaAppManager v1.0 25.02.2020 \n ");
+        sb.append(" CinemaAppManager v1.0 23.08.2020 \n ");
         sb.append(" Karol Szot \n");
         sb.append(" ----------------------------------------------------------------------------- \n");
         System.out.println(sb.toString());
